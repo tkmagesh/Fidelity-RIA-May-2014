@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<style>
+	label {
+		display : block;
+	}
+	.spanError{
+		font-style: italic;
+		color : red;
+		margin-left: 10px;
+	}
+	</style>
+	<script>
+	window.onload = initialize;
+	function initialize(){
+		document.getElementById("btnCalculate").onclick = onBtnCalculateClick;
+		document.getElementById("rangeTax").onchange = onRangeTaxChange;
+	}
+	function onRangeTaxChange(){
+		var currentTax = document.getElementById("rangeTax").value;
+		document.getElementById("spanTax").innerHTML = currentTax + "%";
+	}
+	function onBtnCalculateClick(){
+		var basic = parseInt(document.getElementById("txtBasic").value,10),
+			hra = parseInt(document.getElementById("txtHra").value,10),
+			da = parseInt(document.getElementById("txtDa").value,10),
+			tax = parseInt(document.getElementById("rangeTax").value,10);
+
+		var gross = basic + hra + da;
+		var net = gross * ((100-tax)/100);
+		document.getElementById("divResult").innerHTML = net;
+	}
+
+	</script>
+</head>
+<body>
+	<h1>Salary Calculator</h1>
+	<div><label for="txtBasic">Basic :</label><input type="text" name="" id="txtBasic"><span class="spanError">Sample error!</span></div>
+	<div><label for="txtHra">HRA :</label><input type="text" name="" id="txtHra"><span class="spanError"></span></div>
+	<div><label for="txtDa">DA :</label><input type="text" name="" id="txtDa"><span class="spanError"></span></div>
+	<div><label for="txtTax">Tax :</label><input type="range" name="" id="rangeTax" min="0" max="50" value="0"><span id="spanTax">Tax%</span></div>
+	<div><input type="button" value="Calculate" id="btnCalculate"></div>
+	<div>
+		<div id="divResult"></div>
+	</div>
+</body>
+</html>
