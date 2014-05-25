@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Greeting App</title>
+	<style>
+	h1{
+		border-bottom: 1px solid gray;
+	}
+	</style>
+	<script>
+	function greet(){
+		var nameBox = document.getElementById("txtName");
+		var greetMsg = "Hi " + nameBox.value + ", Have a nice day";
+		var msgBox = document.getElementById("divMessage");
+		msgBox.innerHTML = greetMsg;
+	}
+	function initialize(){
+		console.log("document loaded");
+		var btnGreet = document.getElementById("btnGreet");
+		btnGreet.onclick = greet;
+	}
+	window.onload = initialize;
+	
+
+	</script>
+</head>
+<body>
+	<h1 >Greeting App</h1>
+	<label for="txtName" accessKey="n">Name :</label>
+	<input type="text" id="txtName">
+
+	<input type="button" value="Greet" id="btnGreet" >
+	<div id="divMessage">[Greeting will be displayed here!]</div>
+	<script type="text/javascript">
+		
+	</script>
+</body>
+</html>
