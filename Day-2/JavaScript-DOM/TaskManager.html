@@ -23,6 +23,37 @@
 		width: 350px;
 	}
 	</style>
+	<script>
+	window.onload = init;
+	function init(){
+		document.getElementById("btnAdd").onclick = onBtnAddClick;
+		attachHandlersToTasks();
+	}
+	function attachHandlersToTasks(){
+		var taskItems = document.getElementsByTagName("li");
+		for(var i=0;i<taskItems.length;i++)
+			taskItems[i].onclick = onTaskItemClick;
+	}
+	function onTaskItemClick(){
+		//console.log("A task item is clicked at " + new Date() + "on " , this.innerHTML);
+		if (this.className === "completed"){
+			this.className = "";
+		} else {
+			this.className = "completed";	
+		}
+		
+	}
+	function onBtnAddClick(){
+		var taskName = document.getElementById("txtTask").value;
+		var ulTaskList = document.getElementById("ulTaskList");
+		/*var newTaskItem = "<li>" + taskName + "</li>";
+		ulTaskList.innerHTML = ulTaskList.innerHTML + newTaskItem;*/
+		var newTaskItem = document.createElement("li");
+		newTaskItem.innerHTML = taskName;
+		newTaskItem.onclick = onTaskItemClick;
+		ulTaskList.appendChild(newTaskItem);
+	}
+	</script>
 </head>
 <body>
 	<h1>Task Manager</h1>
