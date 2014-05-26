@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>jQuery - Intro</title>
+	<style>
+	input{
+		display : block;
+	}
+	.highlight{
+		border : 2px solid red;
+	}
+	</style>
+	<script src="jquery-1.11.1.js"></script>
+	<script>
+	function hl(jqo){
+		jqo.addClass("highlight");
+	}
+	function rhl(){
+		jQuery("*").removeClass("highlight");	
+	}
+	</script>
+</head>
+<body>
+	<input type="text" name="" id="txtFirstName" class="nameBox" value="Magesh">
+	<input type="text" name="" id="txtLastName" class="nameBox" value="Kuppan">
+	<input type="text" name="" id="txtAge" class="numberBox" value="23">
+	<input type="button" value="Save" id="btnSave">
+	<div id="divMessage"></div>
+</body>
+</html>

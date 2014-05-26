@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<style>
+	label {
+		display : block;
+	}
+	.spanError{
+		font-style: italic;
+		color : red;
+		margin-left: 10px;
+		display : none;
+	}
+	.error {
+		border : 1px solid red;
+		background-color: bisque;
+	}
+	</style>
+	<script src="jquery-1.11.1.js"></script>
+
+	<script>
+	$(initialize);
+	function initialize(){
+		$("#btnCalculate").click(onBtnCalculateClick);
+		$("#rangeTax").change(onRangeTaxChange);
+	}
+	function onRangeTaxChange(){
+		$("#spanTax").html(this.value + "%");
+	}
+	function isEmpty(){
+		return this.value === "";
+	}
+	function isValid(){
+
+		/*var isErrorFound = false;
+		$(":text").each(function(){
+			var $this = $(this);
+			if ($this.val() === ""){
+				isErrorFound = true;
+				$this.addClass("error").siblings(".spanError").show();
+			} else {
+				$this.removeClass("error").siblings(".spanError").hide();
+			}
+		});
+		return !isErrorFound;
+		*/
+
+		/*
+		var $errorBoxes = $(":text")
+			.filter(isEmpty)
+			.addClass("error")
+			.siblings("span.spanError")
+			.show()
+			.end();
+
+		$(":text")
+			.not($errorBoxes)
+			.removeClass('error')
+			.siblings("span.spanError")
+			.hide();
+
+		return $errorBoxes.length === 0;
+		*/
+
+		$(":text")
+			.filter(isEmpty)
+			.addClass("error")
+			.siblings("span.spanError")
+			.show()
+			.end()
+			.end()
+			.not(isEmpty)
+			.removeClass("error")
+			.siblings("span.spanError")
+			.hide();
+		return $(".error").length === 0;
+
+		
+	}
+	function onBtnCalculateClick(){
+		if (isValid()){
+			/*var basic = parseInt($("#txtBasic").val(),10),
+				hra = parseInt($("#txtHra").val(),10),
+				da = parseInt($("#txtDa").val(),10),
+				tax = parseInt($("#rangeTax").val(),10);
+	
+			var gross = basic + hra + da;*/
+			var gross = 0;
+			$("input:text").each(function(){ gross += parseInt(this.value,10);});
+			var net = gross * ((100-$("#rangeTax").val())/100);
+			$("#divResult").html(net);
+		}
+	}
+
+	</script>
+</head>
+<body>
+	<h1>Salary Calculator</h1>
+	<div><label for="txtBasic">Basic :</label><input type="text" name="" id="txtBasic"><span class="spanError">Basic is required!</span></div>
+	<div><label for="txtHra">HRA :</label><input type="text" name="" id="txtHra"><span class="spanError">HRA is required!</span></div>
+	<div><label for="txtDa">DA :</label><input type="text" name="" id="txtDa"><span class="spanError">DA is required!</span></div>
+	<div><label for="txtTax">Tax :</label><input type="range" name="" id="rangeTax" min="0" max="50" value="0"><span id="spanTax">Tax%</span></div>
+	<div><input type="button" value="Calculate" id="btnCalculate"></div>
+	<div>
+		<div id="divResult"></div>
+	</div>
+</body>
+</html>

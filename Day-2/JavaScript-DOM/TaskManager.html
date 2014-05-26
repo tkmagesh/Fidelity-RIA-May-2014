@@ -27,6 +27,7 @@
 	window.onload = init;
 	function init(){
 		document.getElementById("btnAdd").onclick = onBtnAddClick;
+		document.getElementById("btnRemoveCompleted").onclick = onBtnRemoveCompleted;
 		attachHandlersToTasks();
 	}
 	function attachHandlersToTasks(){
@@ -52,6 +53,14 @@
 		newTaskItem.innerHTML = taskName;
 		newTaskItem.onclick = onTaskItemClick;
 		ulTaskList.appendChild(newTaskItem);
+	}
+	function onBtnRemoveCompleted(){
+		var ulTaskList = document.getElementById("ulTaskList");
+		for(var i=ulTaskList.children.length-1;i>=0;i--){
+			var taskItem = ulTaskList.children[i];
+			if (taskItem.className === "completed")
+				ulTaskList.removeChild(taskItem);
+		}
 	}
 	</script>
 </head>
