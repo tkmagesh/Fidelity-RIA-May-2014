@@ -23,6 +23,23 @@
 	#ulTaskList{
 		width: 350px;
 	}
+
+	#divMessages{
+		position: absolute;
+		right: 0px;
+		bottom: 0px;
+	}
+
+	div.message {
+		border: 1px solid gray;
+		padding: 5px;
+		margin: 5px;
+		border-radius: 5px;
+		background-color: black;
+		color: yellow;
+	}
+
+
 	</style>
 	<script src="jquery-1.11.1.js"></script>
 	<script>
@@ -53,7 +70,17 @@
 		displayMessage("zero or more completed tasks are removed");
 	}
 	function displayMessage(msg){
-		$("#divMessage").hide().html(msg).fadeIn().delay(5000).fadeOut();
+		//$("#divMessage").hide().html(msg).fadeIn().delay(5000).fadeOut();
+		$("<div>")
+			.addClass("message")
+			.html(msg)
+			.hide()
+			.appendTo("#divMessages")
+			.slideDown()
+			.delay(4000)
+			.fadeOut(function(){
+				$(this).remove();
+			});
 	}
 	</script>
 	<script>
@@ -85,6 +112,8 @@
 		<li>Task -2</li>
 		<li>Task -3</li>
 	</ul>
-	<div id="divMessage"></div>
+	<div id="divMessages">
+		
+	</div>
 </body>
 </html>
