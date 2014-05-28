@@ -35,24 +35,65 @@
 
 	<script>
 	/* View Implementation*/
-	var model = new GreetingModel({firstName : '', lastName : ''});
+	
+	function GreetingView(model){
+		var $el = this.$el = $("<div></div>");
+		var template = '<input type="text" name="" id="txtFirstName"><input type="text" name="" id="txtLastName"><br><input type="button" value="Greet" id="btnGreet"><div id="divMessage"></div>';
+
+		this.model = model;
+		this.render = function(){
+			this.$el.append(template);
+			return this;
+		};
+
+		this.initialize = function(){
+			this.$el.on("change", "#txtFirstName", function(){
+				model.set('firstName',this.value);
+			});
+
+			this.$el.on("change", "#txtLastName", function(){
+				model.set('lastName',this.value);
+			});
+
+			/*Subscribe to Model changes*/
+			model.addSubscriber('firstName',function(){
+				$("#txtFirstName",$el).val(model.get('firstName'));
+			});
+
+			model.addSubscriber('lastName',function(){
+				$("#txtLastName",$el).val(model.get('lastName'));
+			});
+
+			model.addSubscriber('greetMsg',function(){
+				$("#divMessage",$el).html(model.get('greetMsg'));
+			});
+
+			/*Subscribe to View Events*/
+			$("#btnGreet").click(function(){
+				model.greet();
+			});
+		}
+	}
 	$(function(){
 		/*Subscribe to View Element changes*/
-		
-
-		/*Subscribe to Model changes*/
-		
-		/*Subscribe to View Events*/
 		
 	})
 
 	</script>
 </head>
 <body>
-	<input type="text" name="" id="txtFirstName">
-	<input type="text" name="" id="txtLastName">
-	<br>
-	<input type="button" value="Greet" id="btnGreet">
-	<div id="divMessage"></div>
+	
 </body>
 </html>
+
+<!-- Console Script -->
+<!-- 
+var greetModel = new GreetModel({firstName : '', lastName : ''});
+var v1 = new GreetView(greetModel);
+v1.initialize();
+v1.render().$el.appendTo(document.body);
+
+var v2 = new GreetView(greetModel);
+v2.initialize();
+v2.render().$el.appendTo(document.body);
+ -->
