@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Greeting App</title>
+	<script src="jquery-1.11.1.js"></script>
+	<script>
+	/* Model Implemenation*/
+	function GreetingModel(defaults){
+		var _attributes = defaults || {},
+			_subscribers = {};
+		this.get = function(attrName){
+			return _attributes[attrName];
+		};
+		this.set = function(attrName, value){
+			_attributes[attrName] = value;
+			this.triggerChange(attrName);
+		};
+		this.addSubscriber = function(attrName,subscriberFn){
+			_subscribers[attrName] = _subscribers[attrName] || [];
+			_subscribers[attrName].push(subscriberFn);
+		};
+		this.triggerChange = function(attrName){
+			var subscribers = _subscribers[attrName] || [];
+			for(var i=0;i<subscribers.length;i++){
+				subscribers[i]();
+			}
+		};
+		this.greet = function(){
+			var greetMsg = this.get('firstName') + " " + this.get('lastName') + ", Have a nice day";
+			this.set('greetMsg', greetMsg);
+		}
+	}
+	</script>
+
+	<script>
+	/* View Implementation*/
+	var model = new GreetingModel({firstName : '', lastName : ''});
+	$(function(){
+		/*Subscribe to View Element changes*/
+		
+
+		/*Subscribe to Model changes*/
+		
+		/*Subscribe to View Events*/
+		
+	})
+
+	</script>
+</head>
+<body>
+	<input type="text" name="" id="txtFirstName">
+	<input type="text" name="" id="txtLastName">
+	<br>
+	<input type="button" value="Greet" id="btnGreet">
+	<div id="divMessage"></div>
+</body>
+</html>
