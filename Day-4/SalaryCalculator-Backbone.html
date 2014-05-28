@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<script src="jquery-1.11.1.js"></script>
+	<script src="underscore.js"></script>
+	<script src="backbone.js"></script>
+	<script type="text/template" id="salaryCalculatorTemplate">
+	<h1>Salary Calculator</h1>
+	<div><label for="txtBasic">Basic :</label><input type="text" name="" id="txtBasic"><span class="spanError">Basic is required!</span></div>
+	<div><label for="txtHra">HRA :</label><input type="text" name="" id="txtHra"><span class="spanError">HRA is required!</span></div>
+	<div><label for="txtDa">DA :</label><input type="text" name="" id="txtDa"><span class="spanError">DA is required!</span></div>
+	<div><label for="txtTax">Tax :</label><input type="range" name="" id="rangeTax" min="0" max="50" value="0"><span id="spanTax">Tax%</span></div>
+	<div><input type="button" value="Calculate" id="btnCalculate"></div>
+	<div>
+		<div id="divResult"></div>
+	</div>
+	</script>
+	<script>
+	var CalculatorModel = Backbone.Model.extend({
+		defaults : {
+			basic : 0,
+			hra : 0,
+			da : 0,
+			tax : 0,
+			salary : 0
+		},
+		calculate : function(){
+			var gross = this.get('basic') + this.get('hra') + this.get('da');
+			var net = gross * ((100-this.get('tax'))/100);
+			this.set('salary',net);
+		}
+	});
+
+	var CalculatorView = Backbone.View.extend({
+		model : CalculatorModel,
+		initialize : function(){
+			this.listenTo(this.model,'change',this.updateView);	
+		},
+		events : {
+			'change input' : 'updateModel',
+			'click #btnCalculate' : 'triggerCalculate'
+		},
+		updateModel : function(){
+			this.model.set('basic',parseInt($("#txtBasic",this.$el).val(),10));
+			this.model.set('hra',parseInt($("#txtHra",this.$el).val(),10));
+			this.model.set('da',parseInt($("#txtDa",this.$el).val(),10));
+			this.model.set('tax',parseInt($("#rangeTax",this.$el).val(),10));
+
+		},
+		triggerCalculate : function(){
+			this.model.calculate();
+		},
+		updateView : function(){
+			this.$("#txtBasic").val(this.model.get('basic'));
+			this.$("#txtHra").val(this.model.get('hra'));
+			this.$("#txtDa").val(this.model.get('da'));
+			this.$("#rangeTax").val(this.model.get('tax'));
+			this.$("#spanTax").html(this.model.get('tax'));
+			this.$("#divResult").html(this.model.get('salary'));
+		},
+		template : $("#salaryCalculatorTemplate").html(),
+		render : function(){
+			this.$el.append(this.template);
+			return this;
+		}
+	});
+	</script>
+</head>
+<body>
+	
+</body>
+</html>

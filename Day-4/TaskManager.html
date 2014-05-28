@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Task Manager</title>
+	<style>
+	.completed{
+		color : red;
+		text-decoration: line-through;
+	}
+	</style>
+	<script src="jquery-1.11.1.js"></script>
+	<script type="text/javascript">
+	function TaskModel(defaults){
+		var _attributes = defaults || {},
+			_subscribers = {};
+		this.get = function(attrName){
+			return _attributes[attrName];
+		};
+		this.set = function(attrName, value){
+			_attributes[attrName] = value;
+			this.triggerChange(attrName);
+		};
+		this.addSubscriber = function(attrName,subscriberFn){
+			_subscribers[attrName] = _subscribers[attrName] || [];
+			_subscribers[attrName].push(subscriberFn);
+		};
+		this.triggerChange = function(attrName){
+			var subscribers = _subscribers[attrName] || [];
+			for(var i=0;i<subscribers.length;i++){
+				subscribers[i]();
+			}
+		};
+		this.toggleCompletion = function(){
+			this.set('isCompleted', !this.get('isCompleted'));
+		}
+	}
+
+	function TaskView(model){
+		var $el = this.$el = $("<li></li>");
+
+		this.model = model;
+		this.render = function(){
+			this.$el.html(this.model.get('name'));
+			if(this.model.get('isCompleted')){
+				this.$el.addClass('completed')	
+			} else {
+				this.$el.removeClass('completed');
+			}
+			
+			return this;
+		};
+
+		this.initialize = function(){
+			this.$el.on("click", function(){
+				model.toggleCompletion();
+			});
+
+			/*Subscribe to Model changes*/
+			model.addSubscriber('isCompleted',function(){
+				if(model.get('isCompleted')){
+					$el.addClass('completed')	
+				} else {
+					$el.removeClass('completed');
+				}
+			});
+
+			model.addSubscriber('name',function(){
+				$el.html(model.get('name'));
+			});
+
+		}
+	}
+
+	function TaskCollection(){
+		var _list = [],
+			_subscribers = {};
+		this.get = function(attrName){
+			return _attributes[attrName];
+		};
+		this.set = function(attrName, value){
+			_attributes[attrName] = value;
+			this.triggerChange(attrName);
+		};
+		this.addSubscriber = function(attrName,subscriberFn){
+			_subscribers[attrName] = _subscribers[attrName] || [];
+			_subscribers[attrName].push(subscriberFn);
+		};
+		this.triggerChange = function(attrName){
+			var subscribers = _subscribers[attrName] || [];
+			var callbackArgs = [].slice.call(arguments,1);
+			for(var i=0;i<subscribers.length;i++){
+				subscribers[i].apply(this,callbackArgs);
+			}
+		};
+		this.add = function(taskName){
+			var newTask = new TaskModel({name : taskName});
+			_list.push(newTask);
+			this.triggerChange('add', newTask);
+		};
+		this.remove = function(task){
+			for(var i=0;i<_list.length;i++){
+				if (_list[i] === task){
+					_list.splice(i,1);
+					break;
+				}
+			}
+			this.triggerChange('remove',task);
+		};
+	}
+
+	function TaskCollectionView(collection){
+		var $el = this.$el = $("<div></div>");
+
+		this.collection = collection;
+		this.render = function(){
+			var template = $("#taskAppTemplate").html();
+			console.log(template);
+			this.$el.append(template);
+			return this;
+		};
+
+		this.initialize = function(){
+			
+			/*Subscribe to Model changes*/
+			collection.addSubscriber('add',function(newTask){
+				var newTaskView = new TaskView(newTask);
+				newTaskView.initialize();
+				newTaskView.render().$el.appendTo($("#ulTaskList",$el));
+			});
+
+			
+			/*Subscribe to View Events*/
+			$el.on('click','#btnAdd',function(){
+				var taskName = $("#txtTask", $el).val();
+				collection.add(taskName);
+			});
+		}
+	}
+	$(function(){
+		window.taskCollection = new TaskCollection();
+		window.taskCollectionView = new TaskCollectionView(taskCollection);
+		taskCollectionView.initialize();
+		taskCollectionView.render().$el.appendTo(document.body);
+	})
+	</script>
+	<script type="text/template" id="taskAppTemplate">
+		<h1>Task Manager</h1>
+	<hr>
+	<span>Task :</span>
+	<input type="text" name="" id="txtTask">
+	<input type="button" value="Add Task" id="btnAdd">
+	<ul id="ulTaskList"></ul>
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
